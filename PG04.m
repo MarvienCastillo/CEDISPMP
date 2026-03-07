@@ -1,9 +1,14 @@
 % GDRIVE LINK: https://drive.google.com/file/d/1HpIfeAxv7rKtD3BVuSX3XkrySSJaKbjQ/view?usp=sharing
 
-[take_3,Fs] = audioread("PG04.wav"); % take the array data and Fs
+[take_3,Fs] = audioread("finalrec.wav"); % take the array data and Fs
 % this is the time vector for final_signal to use for the plot
+figure('Name', 'Full Speech Waveform');
+
 t_final = (0:length(take_3)-1) / Fs;
 plot(t_final,take_3); % useful for plotting the x coordinate of every vowel
+title('Full Audio Recording: Even-Numbered Group Syllables');
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 % manually get the x axis value of each vowel using the plot graph of the speech
 start_ax = round(0.971875 * Fs); % start x axis of 'a' vowel
