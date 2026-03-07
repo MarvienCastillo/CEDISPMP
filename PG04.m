@@ -1,6 +1,6 @@
 % GDRIVE LINK: https://drive.google.com/file/d/1HpIfeAxv7rKtD3BVuSX3XkrySSJaKbjQ/view?usp=sharing
 
-[take_3,Fs] = audioread("finalrec.wav"); % take the array data and Fs
+[take_3,Fs] = audioread("PG04.wav"); % take the array data and Fs
 % this is the time vector for final_signal to use for the plot
 figure('Name', 'Full Speech Waveform');
 
