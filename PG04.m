@@ -94,9 +94,7 @@ s1 = [magandang; p; ha_s1; pon_s1];
 %% Sentence 2: /Magandang ha'pon?/ (Question - Stress on 'pon', rising pitch)
 ha_s2  = 0.7 * change_duration(ha, 0.3); % Quieter and drastically shorter (fast /a/)
 pon_s2 = 1.2 * apply_pitch_bend(change_duration(pon, 1.3), 'up'); % Louder, slightly longer, rising tail pitch
-% Create a much smaller pause for "hapon" (e.g., 0.01 seconds instead of 0.1)
-p_short = zeros(round(0.00000000001 * Fs), 1);
-s2 = [magandang; p; ha_s2; pon_s2]; 
+s2 = [magandang; p; ha_s2;pon_s2]; 
 
 %% Sentence 3: /Magandang ga'bi!/ (Greeting - Stress on 'bi', falling pitch)
 ga_s3 = 0.8 * ga; % Unstressed, normal duration
@@ -148,9 +146,9 @@ end
 % =========================================================================
 
 function out = change_duration(syl, factor)
-    % Changes duration but adds a tiny 5ms fade to edges to prevent clicking
+    % Changes duration but adds a tiny fade to edges to prevent clicking
     Fs_local = 16000; 
-    fade_len = round(0.000000000005 * Fs_local);
+    fade_len = round(0.000005 * Fs_local);
     
     % Standard duration logic
     len = length(syl);
