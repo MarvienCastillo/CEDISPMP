@@ -102,8 +102,13 @@ function f0 = computePitch(signal, Fs)
 end
 
 %% Phase 2
+%% Phase 2: Synthesis of Sentences
+% Required: 16 kHz sampling rate
+Fs_target = 16000;
 
-% Extract syllables manually
+Fs = Fs_target;
+
+% Re-extract syllables at 16kHz for consistency
 ma   = take_3(round(0.30*Fs):round(1.23*Fs));
 gan  = take_3(round(1.86*Fs):round(2.27*Fs));
 dang = take_3(round(2.90*Fs):round(3.30*Fs));
