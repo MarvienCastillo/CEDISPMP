@@ -94,6 +94,8 @@ s1 = [magandang; p; ha_s1; pon_s1];
 %% Sentence 2: /Magandang ha'pon?/ (Question - Stress on 'pon', rising pitch)
 ha_s2  = 0.7 * change_duration(ha, 0.3); % Quieter and drastically shorter (fast /a/)
 pon_s2 = 1.2 * apply_pitch_bend(change_duration(pon, 1.3), 'up'); % Louder, slightly longer, rising tail pitch
+% Create a much smaller pause for "hapon" (e.g., 0.01 seconds instead of 0.1)
+p_short = zeros(round(0.00000000001 * Fs), 1);
 s2 = [magandang; p; ha_s2; pon_s2]; 
 
 %% Sentence 3: /Magandang ga'bi!/ (Greeting - Stress on 'bi', falling pitch)
@@ -146,43 +148,54 @@ end
 % =========================================================================
 
 function out = change_duration(syl, factor)
-    % Changes the duration of a syllable without changing its pitch.
-    % It does this by splitting the array into 3 parts and modifying the middle.
+    % Changes duration but adds a tiny 5ms fade to edges to prevent clicking
+    Fs_local = 16000; 
+    fade_len = round(0.005 * Fs_local);
+    
+    % Standard duration logic
     len = length(syl);
     third = round(len/3);
-    
     head = syl(1:third);
     middle = syl(third+1:2*third);
     tail = syl(2*third+1:end);
     
     if factor >= 1
-        % Repeat the middle segment (e.g., factor=2 doubles the middle length)
         middle_mod = repmat(middle, round(factor), 1);
     else
-        % Shrink the middle segment (e.g., factor=0.3 keeps only 30% of the middle)
         keep_len = round(length(middle) * factor);
         middle_mod = middle(1:keep_len);
     end
-    out = [head; middle_mod; tail];
+    
+    combined = [head; middle_mod; tail];
+    
+    % Apply Fades
+    win_in = linspace(0, 1, fade_len)';
+    win_out = linspace(1, 0, fade_len)';
+    combined(1:fade_len) = combined(1:fade_len) .* win_in;
+    combined(end-fade_len+1:end) = combined(end-fade_len+1:end) .* win_out;
+    out = combined;
 end
 
 function out = apply_pitch_bend(syl, direction)
-    % Bends the pitch of the tail end (last 30%) up or down for intonation.
-    % Uses resample() from the Signal Processing Toolbox.
+    % Creates a smoother pitch glide instead of a sudden jump
     len = length(syl);
-    idx = round(len * 0.7); % Identify the last 30% of the syllable
-    
+    idx = round(len * 0.7); 
     head = syl(1:idx-1);
     tail = syl(idx:end);
     
+    % Break tail into two halves for a multi-stage glide
+    mid_point = round(length(tail)/2);
+    t1 = tail(1:mid_point);
+    t2 = tail(mid_point+1:end);
+    
     if strcmp(direction, 'up')
-        % Resample to speed up the tail (higher pitch, slightly shorter)
-        tail_mod = resample(tail, 5, 6); 
+        % Gradual rise
+        t1 = resample(t1, 11, 12); % slight rise
+        t2 = resample(t2, 9, 11);  % sharper rise
     elseif strcmp(direction, 'down')
-        % Resample to slow down the tail (lower pitch, slightly longer)
-        tail_mod = resample(tail, 6, 5);
-    else
-        tail_mod = tail;
+        % Gradual fall
+        t1 = resample(t1, 12, 11); % slight fall
+        t2 = resample(t2, 11, 9);  % sharper fall
     end
-    out = [head; tail_mod];
+    out = [head; t1; t2];
 end
