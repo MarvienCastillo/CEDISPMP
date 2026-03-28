@@ -150,7 +150,7 @@ end
 function out = change_duration(syl, factor)
     % Changes duration but adds a tiny 5ms fade to edges to prevent clicking
     Fs_local = 16000; 
-    fade_len = round(0.005 * Fs_local);
+    fade_len = round(0.000000000005 * Fs_local);
     
     % Standard duration logic
     len = length(syl);
