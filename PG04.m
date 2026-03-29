@@ -157,8 +157,10 @@ function out = change_duration(syl, factor)
     tail = syl(2*third+1:end);
     
     if factor >= 1
+        % Repeat the middle segment (e.g., factor=2 doubles the middle length)
         middle_mod = repmat(middle, round(factor), 1);
     else
+        % Shrink the middle segment (e.g., factor=0.3 keeps only 30% of the middle)
         keep_len = round(length(middle) * factor);
         middle_mod = middle(1:keep_len);
     end
@@ -166,10 +168,10 @@ function out = change_duration(syl, factor)
     combined = [head; middle_mod; tail];
     
     % Apply Fades
-    win_in = linspace(0, 1, fade_len)';
-    win_out = linspace(1, 0, fade_len)';
-    combined(1:fade_len) = combined(1:fade_len) .* win_in;
-    combined(end-fade_len+1:end) = combined(end-fade_len+1:end) .* win_out;
+    win_in = linspace(0, 1, fade_len)'; % generates an array 0 to 1 
+    win_out = linspace(1, 0, fade_len)'; % generates an array 1 to 0
+    combined(1:fade_len) = combined(1:fade_len) .* win_in; % uses win_in to increase the volume of the first sample to nth sample 
+    combined(end-fade_len+1:end) = combined(end-fade_len+1:end) .* win_out; % uses win_out to lower the volume from after the nth sample to end
     out = combined;
 end
 
