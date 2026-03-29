@@ -74,7 +74,6 @@ gan  = take_3(round(1.86*Fs):round(2.27*Fs));
 dang = take_3(round(2.90*Fs):round(3.30*Fs));
 ha   = take_3(round(3.90*Fs):round(4.38*Fs));
 pon  = take_3(round(5.01*Fs):round(5.42*Fs));
-o_syl= take_3(round(6.14*Fs):round(6.49*Fs));
 ga   = take_3(round(7.20*Fs):round(7.57*Fs));
 bi   = take_3(round(8.30*Fs):round(8.45*Fs));
 
@@ -113,7 +112,7 @@ bi_eve = 1.2 * apply_pitch_bend(change_duration(bi, 2), 'up');
 word_eve = [ga_eve; bi_eve];
 
 % Combine sentence 4
-s4 = [magandang; p; word_taro; P; o_syl; p; word_eve];
+s4 = [magandang; p; word_taro; P; o_vowel; p; word_eve];
 
 
 %% Output, Plotting, and Saving
